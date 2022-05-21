@@ -1,7 +1,12 @@
 [package]
 name = "git-collage"
+description = "A tool for selectively mirroring Git repositories"
 version = "0.1.0"
 edition = "2021"
+readme = "README.md"
+license = "MIT"
+homepage = "https://github.com/DanNixon/git-collage"
+repository = "https://github.com/DanNixon/git-collage"
 
 [dependencies]
 anyhow = "1.0"
