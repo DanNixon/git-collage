@@ -16,6 +16,18 @@ struct MirrorResult {
     refs: Vec<RefStatusReport>,
 }
 
+impl fmt::Display for MirrorResult {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "OK: {}", self.mapping)?;
+        for r in &self.refs {
+            write!(f, "\n{}", r)?;
+        }
+        Ok(())
+    }
+}
+
+impl CommandResultDetails for MirrorResult {}
+
 struct RefStatusReport {
     name: String,
 
@@ -75,18 +87,6 @@ impl fmt::Display for RefStatusReport {
     }
 }
 
-impl CommandResultDetails for MirrorResult {}
-
-impl fmt::Display for MirrorResult {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "OK: {}", self.mapping)?;
-        for r in &self.refs {
-            write!(f, "\n{}", r)?;
-        }
-        Ok(())
-    }
-}
-
 fn mirror(config: &RepositoryMapping) -> Result<MirrorResult> {
     let repo = match Repository::open(&config.path) {
         Ok(r) => r,
@@ -122,7 +122,7 @@ fn mirror(config: &RepositoryMapping) -> Result<MirrorResult> {
 
     let ref_names: Vec<&str> = remote_refs.iter().map(|h| h.name()).collect();
     if ref_names.is_empty() {
-        return Err(anyhow!("Matched zero remote heads"));
+        return Err(anyhow!("Matched zero remote refs"));
     }
 
     remote.fetch(&ref_names, None, Some("git-collage fetch"))?;
