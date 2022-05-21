@@ -1,0 +1,41 @@
+[[providers]]
+path = '~/git_mirrors_test/private'
+
+[[providers.ref_match.rules]]
+type = 'regex'
+expr = 'refs/heads/.*'
+[[providers.ref_match.rules]]
+type = 'regex'
+expr = 'refs/tags/.*'
+
+[providers.source]
+type = 'github_authenticated_user'
+token = ''
+affiliation = ['owner']
+visibility = ['public', 'private']
+
+[[providers]]
+path = '~/git_mirrors_test/misc'
+
+[[providers.ref_match.rules]]
+type = 'exact'
+expr = 'refs/heads/main'
+[[providers.ref_match.rules]]
+type = 'exact'
+expr = 'refs/heads/master'
+[[providers.ref_match.rules]]
+type = 'regex'
+expr = 'refs/tags/.*'
+
+[providers.source]
+type = 'static_list'
+
+[[providers.source.repos]]
+git_url = 'https://github.com/dannixon/dotfiles'
+path = 'dotfiles'
+[[providers.source.repos.ref_match.rules]]
+type = 'exact'
+expr = 'refs/heads/main'
+
+[[providers.source.repos]]
+git_url = 'https://github.com/dannixon/ansible-system'
