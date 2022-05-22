@@ -54,3 +54,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: target/release/git-collage
+          fail_on_unmatched_files: true
