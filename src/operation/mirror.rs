@@ -11,7 +11,7 @@ use git2::{
     Direction, Oid, RemoteHead, Repository, RepositoryInitMode, RepositoryInitOptions, Time,
 };
 use rayon::prelude::*;
-use std::{fmt, process::Command, str};
+use std::{fmt, str};
 
 struct MirrorResult {
     mapping: RepositoryMapping,
@@ -100,15 +100,7 @@ fn mirror(config: &RepositoryMapping) -> Result<MirrorResult> {
         )?,
     };
 
-    Command::new("git")
-        .args([
-            "-C",
-            config.path.to_str().unwrap(),
-            "config",
-            "core.logAllRefUpdates",
-            "always",
-        ])
-        .output()?;
+    repo.config()?.set_str("core.logAllRefUpdates", "always")?;
 
     let mut remote = match repo.find_remote("origin") {
         Ok(r) => r,
