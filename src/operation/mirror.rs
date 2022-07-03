@@ -7,7 +7,9 @@ use crate::{
 use anyhow::{anyhow, Result};
 use chrono::{DateTime, FixedOffset};
 use crossbeam_channel::Sender;
-use git2::{Direction, Oid, RemoteHead, Repository, Time};
+use git2::{
+    Direction, Oid, RemoteHead, Repository, RepositoryInitMode, RepositoryInitOptions, Time,
+};
 use rayon::prelude::*;
 use std::{fmt, process::Command, str};
 
@@ -90,7 +92,12 @@ impl fmt::Display for RefStatusReport {
 fn mirror(config: &RepositoryMapping) -> Result<MirrorResult> {
     let repo = match Repository::open(&config.path) {
         Ok(r) => r,
-        Err(_) => Repository::init_bare(&config.path)?,
+        Err(_) => Repository::init_opts(
+            &config.path,
+            RepositoryInitOptions::new()
+                .bare(true)
+                .mode(RepositoryInitMode::SHARED_GROUP),
+        )?,
     };
 
     Command::new("git")
