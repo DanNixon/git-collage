@@ -9,21 +9,21 @@ homepage = "https://github.com/DanNixon/git-collage"
 repository = "https://github.com/DanNixon/git-collage"
 
 [dependencies]
-anyhow = "1.0"
+anyhow = "1.0.58"
 async-trait = "0.1.53"
 chrono = "0.4.19"
-clap = { version = "3.1", features = ["derive"] }
-crossbeam-channel = "0.5"
-crossbeam-utils = "0.8"
-env_logger = "0.9"
+clap = { version = "3.2.8", features = ["derive"] }
+crossbeam-channel = "0.5.5"
+crossbeam-utils = "0.8.10"
+env_logger = "0.9.0"
 futures = "0.3.21"
-git2 = "0.14"
-log = "0.4"
-octocrab = "0.16"
+git2 = "0.14.4"
+log = "0.4.17"
+octocrab = "0.16.0"
 rayon = "1.5.3"
-regex = "1"
-serde = { version = "1.0", features = ["derive"] }
+regex = "1.5.6"
+serde = { version = "1.0.138", features = ["derive"] }
 serde_variant = "0.1.1"
-tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
-toml = "0.5"
-url = { version = "2.2", features = ["serde"] }
+tokio = { version = "1.19.2", features = ["macros", "rt-multi-thread"] }
+toml = "0.5.9"
+url = { version = "2.2.2", features = ["serde"] }
