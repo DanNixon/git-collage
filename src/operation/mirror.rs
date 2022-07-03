@@ -102,6 +102,7 @@ fn mirror(config: &RepositoryMapping) -> Result<MirrorResult> {
 
     repo.config()?.set_str("core.logAllRefUpdates", "always")?;
 
+    let _ = repo.remote_set_url("origin", config.git_url.as_str());
     let mut remote = match repo.find_remote("origin") {
         Ok(r) => r,
         Err(_) => repo.remote("origin", config.git_url.as_str())?,
