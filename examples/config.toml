@@ -1,5 +1,5 @@
 [[providers]]
-path = '~/git_mirrors_test/private'
+path = 'mirrors/private'
 
 [[providers.ref_match.rules]]
 type = 'regex'
@@ -15,7 +15,7 @@ affiliation = ['owner']
 visibility = ['public', 'private']
 
 [[providers]]
-path = '~/git_mirrors_test/misc'
+path = 'mirrors/misc'
 
 [[providers.ref_match.rules]]
 type = 'exact'
