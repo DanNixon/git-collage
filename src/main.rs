@@ -1,4 +1,5 @@
 mod config;
+mod filter;
 mod matching_rules;
 mod operation;
 mod source;

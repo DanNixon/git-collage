@@ -14,6 +14,10 @@ token = ''
 affiliation = ['owner']
 visibility = ['public', 'private']
 
+[[providers.filters]]
+type = 'blocklist'
+urls = ['https://github.com/DanNixon/not-this-one', 'https://github.com/DanNixon/or-this-one']
+
 [[providers]]
 path = 'mirrors/misc'
 
