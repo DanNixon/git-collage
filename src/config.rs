@@ -1,4 +1,5 @@
 use crate::{
+    filter::{Chain, FilterRepository},
     matching_rules::Ruleset,
     source::{Provider, SourceRepositoryMappingProducer},
     util::safe_display_url,
@@ -88,6 +89,8 @@ struct ProviderConfig {
     path: PathBuf,
     ref_match: Ruleset,
     source: Provider,
+    #[serde(default, flatten)]
+    filters: Chain,
 }
 
 #[async_trait]
@@ -96,6 +99,7 @@ impl RepositoryMappingProducer for ProviderConfig {
         match self.source.repository_mappings().await {
             Ok(m) => m
                 .into_iter()
+                .filter(|r| self.filters.filter(r))
                 .map(|r| {
                     Ok(RepositoryMapping {
                         path: self.path.join(if r.path.has_root() {
