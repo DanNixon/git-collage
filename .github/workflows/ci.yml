@@ -26,6 +26,9 @@ jobs:
       - name: Clippy
         run: cargo clippy -- -Dwarnings
 
+      - name: cargo-deny
+        uses: EmbarkStudios/cargo-deny-action@v1
+
   build-and-test:
     name: Build and Test
     runs-on: ubuntu-latest
