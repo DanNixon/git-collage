@@ -87,10 +87,10 @@ impl RepositoryMappingProducer for Config {
 #[derive(Debug, Deserialize)]
 struct ProviderConfig {
     path: PathBuf,
-    ref_match: Ruleset,
+    ref_matchers: Ruleset,
     source: Provider,
-    #[serde(default, flatten)]
-    filters: Chain,
+    #[serde(default)]
+    repo_filters: Chain,
 }
 
 #[async_trait]
@@ -99,7 +99,7 @@ impl RepositoryMappingProducer for ProviderConfig {
         match self.source.repository_mappings().await {
             Ok(m) => m
                 .into_iter()
-                .filter(|r| self.filters.filter(r))
+                .filter(|r| self.repo_filters.filter(r))
                 .map(|r| {
                     Ok(RepositoryMapping {
                         path: self.path.join(if r.path.has_root() {
@@ -109,7 +109,7 @@ impl RepositoryMappingProducer for ProviderConfig {
                         }),
                         ref_match: match r.ref_match {
                             Some(m) => m,
-                            None => self.ref_match.clone(),
+                            None => self.ref_matchers.clone(),
                         },
                         git_url: r.git_url,
                     })

@@ -1,4 +1,5 @@
 mod blocklist;
+mod url_path_prefix;
 
 use crate::source::SourceRepositoryMapping;
 use enum_dispatch::enum_dispatch;
@@ -14,6 +15,7 @@ pub(crate) trait FilterRepository {
 #[enum_dispatch]
 enum Filter {
     Blocklist(blocklist::Blocklist),
+    UrlPathPrefix(url_path_prefix::UrlPathPrefix),
 }
 
 #[derive(Debug, Default, Deserialize)]

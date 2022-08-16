@@ -1,10 +1,10 @@
 [[providers]]
 path = 'mirrors/private'
 
-[[providers.ref_match.rules]]
+[[providers.ref_matchers.rules]]
 type = 'regex'
 expr = 'refs/heads/.*'
-[[providers.ref_match.rules]]
+[[providers.ref_matchers.rules]]
 type = 'regex'
 expr = 'refs/tags/.*'
 
@@ -21,13 +21,13 @@ urls = ['https://github.com/DanNixon/not-this-one', 'https://github.com/DanNixon
 [[providers]]
 path = 'mirrors/misc'
 
-[[providers.ref_match.rules]]
+[[providers.ref_matchers.rules]]
 type = 'exact'
 expr = 'refs/heads/main'
-[[providers.ref_match.rules]]
+[[providers.ref_matchers.rules]]
 type = 'exact'
 expr = 'refs/heads/master'
-[[providers.ref_match.rules]]
+[[providers.ref_matchers.rules]]
 type = 'regex'
 expr = 'refs/tags/.*'
 
@@ -37,7 +37,7 @@ type = 'static_list'
 [[providers.source.repos]]
 git_url = 'https://github.com/dannixon/dotfiles'
 path = 'dotfiles'
-[[providers.source.repos.ref_match.rules]]
+[[providers.source.repos.ref_matchers.rules]]
 type = 'exact'
 expr = 'refs/heads/main'
 
