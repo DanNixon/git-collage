@@ -157,7 +157,7 @@ fn mirror(config: &RepositoryMapping) -> Result<MirrorResult> {
     })
 }
 
-pub(crate) fn run(
+pub(super) fn run(
     mappings: &[RepositoryMapping],
     s: Sender<CommandResult>,
 ) -> std::result::Result<(), usize> {

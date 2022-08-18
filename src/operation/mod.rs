@@ -1,6 +1,7 @@
 mod garbage_collect;
 mod list;
 mod mirror;
+mod stale;
 
 use crate::config::RepositoryMapping;
 use anyhow::{anyhow, Result};
@@ -20,6 +21,10 @@ pub(crate) enum Command {
     /// Run `git gc` on local mirrors
     #[clap(name = "gc")]
     GarbageCollect,
+
+    /// Identify stale/unmanaged local mirrors
+    #[clap(name = "stale")]
+    IdentifyStale(stale::Cli),
 }
 
 pub(crate) type CommandResult =
@@ -75,6 +80,7 @@ impl Command {
                 Command::ListRepositories => list::run(&mappings),
                 Command::Mirror => mirror::run(&mappings, s),
                 Command::GarbageCollect => garbage_collect::run(&mappings, s),
+                Command::IdentifyStale(args) => stale::run(&mappings, args),
             };
 
             match result {
