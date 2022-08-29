@@ -1,4 +1,4 @@
-# git-collage [![CI](https://github.com/DanNixon/git-collage/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/DanNixon/git-collage/actions/workflows/ci.yml)
+# git-collage [![CI](https://github.com/DanNixon/git-collage/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/DanNixon/git-collage/actions/workflows/ci.yml) [![Crates.io](https://img.shields.io/crates/v/git-collage)](https://crates.io/crates/git-collage)
 
 A tool for selectively mirroring Git repositories.
 
