@@ -13,8 +13,8 @@ keywords = ["git", "mirror", "github"]
 [dependencies]
 anyhow = "1.0.58"
 async-trait = "0.1.53"
-chrono = "0.4.19"
-clap = { version = "3.2.8", features = ["derive"] }
+chrono = "0.4.22"
+clap = { version = "4.0.15", features = ["derive"] }
 crossbeam-channel = "0.5.5"
 crossbeam-utils = "0.8.10"
 enum_dispatch = "0.3.8"

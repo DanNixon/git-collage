@@ -56,7 +56,7 @@ fn find_git_repos(path: &Path) -> Vec<PathBuf> {
 #[derive(Debug, Parser)]
 pub(crate) struct Cli {
     /// Directories to search for existing local repositories
-    #[clap(parse(from_os_str), value_name = "PATH")]
+    #[clap(value_name = "PATH")]
     paths: Vec<PathBuf>,
 }
 

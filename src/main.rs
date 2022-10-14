@@ -16,13 +16,7 @@ use std::path::PathBuf;
 #[clap(author, version, about, long_about = None)]
 struct Cli {
     /// Path to configuration file(s)
-    #[clap(
-        short,
-        long,
-        parse(from_os_str),
-        value_name = "FILE",
-        default_value = "./config.toml"
-    )]
+    #[clap(short, long, value_name = "FILE", default_value = "./config.toml")]
     config: Vec<PathBuf>,
 
     #[clap(subcommand)]
