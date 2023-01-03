@@ -43,7 +43,7 @@ impl Config {
     pub(crate) fn load(files: &[PathBuf]) -> Result<Self> {
         let configs: Vec<Config> = files
             .iter()
-            .filter_map(|p| match fs::read_to_string(&p) {
+            .filter_map(|p| match fs::read_to_string(p) {
                 Ok(s) => Some(s),
                 Err(e) => {
                     log::error!("Failed to read file: {}", e);

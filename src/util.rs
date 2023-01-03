@@ -3,7 +3,7 @@ use git2::Time;
 use url::Url;
 
 pub(crate) fn safe_display_url(mut url: Url) -> String {
-    if url.password() != None {
+    if url.password().is_some() {
         let _ = url.set_password(Some("REDACTED"));
     }
     url.to_string()
@@ -11,8 +11,8 @@ pub(crate) fn safe_display_url(mut url: Url) -> String {
 
 pub(crate) fn git_timestamp(t: Time) -> DateTime<FixedOffset> {
     DateTime::from_utc(
-        NaiveDateTime::from_timestamp(t.seconds(), 0),
-        FixedOffset::east(t.offset_minutes() * 60),
+        NaiveDateTime::from_timestamp_opt(t.seconds(), 0).unwrap(),
+        FixedOffset::east_opt(t.offset_minutes() * 60).unwrap(),
     )
 }
 

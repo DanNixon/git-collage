@@ -32,7 +32,7 @@ fn find_git_repos(path: &Path) -> Vec<PathBuf> {
     if is_a_git_repo(path) {
         vec![path.to_path_buf()]
     } else {
-        let entries: Vec<DirEntry> = match fs::read_dir(&path) {
+        let entries: Vec<DirEntry> = match fs::read_dir(path) {
             Ok(o) => o.filter_map(|i| i.ok()).collect(),
             Err(e) if e.kind() == io::ErrorKind::PermissionDenied => {
                 log::warn!("{}: {}", e, &path.display());
