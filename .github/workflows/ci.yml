@@ -15,46 +15,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
-
-      - name: Setup
-        run: rustup component add clippy rustfmt
+      - uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v20
 
       - name: Format
-        run: cargo fmt -- --check
+        run: nix build -L .#fmt
 
       - name: Clippy
-        run: cargo clippy -- -Dwarnings
+        run: nix build -L .#clippy
 
       - name: cargo-deny
-        uses: EmbarkStudios/cargo-deny-action@v1
+        run: nix develop --command cargo-deny check
 
-  build-and-test:
-    name: Build and Test
-    runs-on: ubuntu-latest
+      - name: Test
+        run: nix build -L .#test
 
-    steps:
-      - uses: actions/checkout@v1
-
-      - name: Build and Test
-        run: cargo test
-
-  release:
-    name: Release
-    if: ${{ github.ref_type == 'tag' }}
+  build:
+    name: Build
     needs:
-      - build-and-test
       - formatting-and-quality
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v20
 
       - name: Build
-        run: cargo build --release
-
-      - name: Publish release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: target/release/git-collage
-          fail_on_unmatched_files: true
+        run: nix build -L
