@@ -10,7 +10,7 @@ pub(crate) fn safe_display_url(mut url: Url) -> String {
 }
 
 pub(crate) fn git_timestamp(t: Time) -> DateTime<FixedOffset> {
-    DateTime::from_utc(
+    DateTime::from_naive_utc_and_offset(
         NaiveDateTime::from_timestamp_opt(t.seconds(), 0).unwrap(),
         FixedOffset::east_opt(t.offset_minutes() * 60).unwrap(),
     )
