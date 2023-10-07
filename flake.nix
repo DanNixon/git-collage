@@ -42,7 +42,12 @@
         devShell = pkgs.mkShell {
           nativeBuildInputs = nativeBuildInputs ++ [ toolchain.toolchain ];
           buildInputs = buildInputs;
-          packages = with pkgs; [ cargo-deny ];
+          packages = with pkgs; [
+            alejandra
+            treefmt
+
+            cargo-deny
+          ];
         };
 
         packages = rec {
@@ -54,15 +59,6 @@
 
             nativeBuildInputs = nativeBuildInputs;
             buildInputs = buildInputs;
-          };
-
-          fmt = naersk'.buildPackage {
-            src = ./.;
-
-            nativeBuildInputs = nativeBuildInputs;
-            buildInputs = buildInputs;
-
-            mode = "fmt";
           };
 
           clippy = naersk'.buildPackage {
