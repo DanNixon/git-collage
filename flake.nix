@@ -13,9 +13,15 @@
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, fenix, naersk }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
+  outputs = {
+    self,
+    nixpkgs,
+    flake-utils,
+    fenix,
+    naersk,
+  }:
+    flake-utils.lib.eachDefaultSystem (
+      system: let
         pkgs = (import nixpkgs) {
           inherit system;
         };
@@ -31,16 +37,15 @@
           rustc = toolchain.rust;
         };
 
-        cargo = builtins.fromTOML ( builtins.readFile ./Cargo.toml );
+        cargo = builtins.fromTOML (builtins.readFile ./Cargo.toml);
         name = cargo.package.name;
         version = cargo.package.version;
 
-        nativeBuildInputs = with pkgs; [ pkg-config ];
-        buildInputs = with pkgs; [ openssl ];
-
+        nativeBuildInputs = with pkgs; [pkg-config];
+        buildInputs = with pkgs; [openssl];
       in {
         devShell = pkgs.mkShell {
-          nativeBuildInputs = nativeBuildInputs ++ [ toolchain.toolchain ];
+          nativeBuildInputs = nativeBuildInputs ++ [toolchain.toolchain];
           buildInputs = buildInputs;
           packages = with pkgs; [
             alejandra
