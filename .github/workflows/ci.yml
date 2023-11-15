@@ -15,17 +15,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: cachix/install-nix-action@v20
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v7
+      - uses: DeterminateSystems/magic-nix-cache-action@v2
+
+      # Evaluate the devshell here so that the time reported for subsequent
+      # steps that use it reflect what is actually done there.
+      - name: Evaluate devshell
+        run: nix develop
 
       - name: Format
         run: nix develop --command treefmt --fail-on-change
 
-      - name: Clippy
-        run: nix build -L .#clippy
-
       - name: cargo-deny
         run: nix develop --command cargo-deny check
+
+      - name: Clippy
+        run: nix build -L .#clippy
 
       - name: Test
         run: nix build -L .#test
@@ -37,8 +43,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: cachix/install-nix-action@v20
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v7
+      - uses: DeterminateSystems/magic-nix-cache-action@v2
+
+      # Evaluate the devshell here so that the time reported for subsequent
+      # steps that use it reflect what is actually done there.
+      - name: Evaluate devshell
+        run: nix develop
 
       - name: Build
         run: nix build -L
