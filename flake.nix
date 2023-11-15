@@ -2,6 +2,8 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
 
+    flake-utils.url = "github:numtide/flake-utils";
+
     fenix = {
       url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -45,14 +47,22 @@
         buildInputs = with pkgs; [openssl];
       in {
         devShell = pkgs.mkShell {
-          nativeBuildInputs = nativeBuildInputs ++ [toolchain.toolchain];
+          nativeBuildInputs = nativeBuildInputs;
           buildInputs = buildInputs;
+
           packages = with pkgs; [
+            # Rust toolchain
+            toolchain.toolchain
+
+            # Code formatting tools
             alejandra
             treefmt
 
+            # Rust dependency linting
             cargo-deny
           ];
+
+          RUSTFLAGS = "-D unused-crate-dependencies";
         };
 
         packages = rec {
@@ -67,21 +77,19 @@
           };
 
           clippy = naersk'.buildPackage {
+            mode = "clippy";
             src = ./.;
 
             nativeBuildInputs = nativeBuildInputs;
             buildInputs = buildInputs;
-
-            mode = "clippy";
           };
 
           test = naersk'.buildPackage {
+            mode = "test";
             src = ./.;
 
             nativeBuildInputs = nativeBuildInputs;
             buildInputs = buildInputs;
-
-            mode = "test";
 
             # Ensure detailed test output appears in nix build log
             cargoTestOptions = x: x ++ ["1>&2"];
