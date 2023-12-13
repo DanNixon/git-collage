@@ -18,7 +18,7 @@ clap = { version = "4.0.15", features = ["derive"] }
 crossbeam-channel = "0.5.5"
 enum_dispatch = "0.3.8"
 env_logger = "0.10.1"
-futures = "0.3.21"
+futures = "0.3.29"
 git2 = "0.18.1"
 log = "0.4.17"
 octocrab = "0.30.1"
