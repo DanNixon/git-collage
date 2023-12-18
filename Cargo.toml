@@ -27,5 +27,5 @@ regex = "1.5.6"
 serde = { version = "1.0.193", features = ["derive"] }
 serde_variant = "0.1.1"
 tokio = { version = "1.23.1", features = ["macros", "rt-multi-thread"] }
-toml = "0.8.0"
+toml = "0.8.8"
 url = { version = "2.5.0", features = ["serde"] }
