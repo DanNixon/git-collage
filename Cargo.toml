@@ -23,7 +23,7 @@ git2 = "0.18.1"
 log = "0.4.17"
 octocrab = "0.32.0"
 rayon = "1.5.3"
-regex = "1.5.6"
+regex = "1.10.2"
 serde = { version = "1.0.193", features = ["derive"] }
 serde_variant = "0.1.1"
 tokio = { version = "1.35.1", features = ["macros", "rt-multi-thread"] }
