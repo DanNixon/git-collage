@@ -12,7 +12,7 @@ keywords = ["git", "mirror", "github"]
 
 [dependencies]
 anyhow = "1.0.76"
-async-trait = "0.1.74"
+async-trait = "0.1.75"
 chrono = "0.4.22"
 clap = { version = "4.0.15", features = ["derive"] }
 crossbeam-channel = "0.5.9"
