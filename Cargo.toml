@@ -11,11 +11,11 @@ categories = ["command-line-utilities", "development-tools"]
 keywords = ["git", "mirror", "github"]
 
 [dependencies]
-anyhow = "1.0.76"
-async-trait = "0.1.75"
+anyhow = "1.0.78"
+async-trait = "0.1.76"
 chrono = "0.4.22"
-clap = { version = "4.0.15", features = ["derive"] }
-crossbeam-channel = "0.5.9"
+clap = { version = "4.4.12", features = ["derive"] }
+crossbeam-channel = "0.5.10"
 enum_dispatch = "0.3.8"
 env_logger = "0.10.1"
 futures = "0.3.30"
