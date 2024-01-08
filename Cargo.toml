@@ -11,10 +11,10 @@ categories = ["command-line-utilities", "development-tools"]
 keywords = ["git", "mirror", "github"]
 
 [dependencies]
-anyhow = "1.0.78"
-async-trait = "0.1.76"
+anyhow = "1.0.79"
+async-trait = "0.1.77"
 chrono = "0.4.22"
-clap = { version = "4.4.12", features = ["derive"] }
+clap = { version = "4.4.13", features = ["derive"] }
 crossbeam-channel = "0.5.10"
 enum_dispatch = "0.3.8"
 env_logger = "0.10.1"
@@ -24,7 +24,7 @@ log = "0.4.17"
 octocrab = "0.32.0"
 rayon = "1.5.3"
 regex = "1.10.2"
-serde = { version = "1.0.193", features = ["derive"] }
+serde = { version = "1.0.195", features = ["derive"] }
 serde_variant = "0.1.1"
 tokio = { version = "1.35.1", features = ["macros", "rt-multi-thread"] }
 toml = "0.8.8"
