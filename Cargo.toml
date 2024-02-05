@@ -26,6 +26,6 @@ rayon = "1.8.1"
 regex = "1.10.3"
 serde = { version = "1.0.196", features = ["derive"] }
 serde_variant = "0.1.1"
-tokio = { version = "1.35.1", features = ["macros", "rt-multi-thread"] }
-toml = "0.8.8"
+tokio = { version = "1.36.0", features = ["macros", "rt-multi-thread"] }
+toml = "0.8.9"
 url = { version = "2.5.0", features = ["serde"] }
