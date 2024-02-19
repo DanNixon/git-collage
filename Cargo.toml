@@ -14,7 +14,7 @@ keywords = ["git", "mirror", "github"]
 anyhow = "1.0.79"
 async-trait = "0.1.77"
 chrono = "0.4.34"
-clap = { version = "4.5.0", features = ["derive"] }
+clap = { version = "4.5.1", features = ["derive"] }
 crossbeam-channel = "0.5.11"
 enum_dispatch = "0.3.8"
 env_logger = "0.10.2"
