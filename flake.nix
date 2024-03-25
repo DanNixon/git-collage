@@ -1,13 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
-
     flake-utils.url = "github:numtide/flake-utils";
-
-    naersk = {
-      url = "github:nix-community/naersk";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs = {
@@ -15,7 +9,6 @@
     nixpkgs,
     flake-utils,
     fenix,
-    naersk,
   }:
     flake-utils.lib.eachDefaultSystem (
       system: let
@@ -23,7 +16,7 @@
           inherit system;
         };
 
-        naersk' = pkgs.callPackage naersk {
+        rustPlatform = pkgs.makeRustPlatform {
           cargo = pkgs.cargo;
           rustc = pkgs.rustc;
         };
@@ -61,33 +54,15 @@
         };
 
         packages = rec {
-          default = naersk'.buildPackage {
-            name = name;
+          default = rustPlatform.buildRustPackage {
+            pname = name;
             version = version;
 
             src = ./.;
+            cargoLock.lockFile = ./Cargo.lock;
 
             nativeBuildInputs = nativeBuildInputs;
             buildInputs = buildInputs;
-          };
-
-          clippy = naersk'.buildPackage {
-            mode = "clippy";
-            src = ./.;
-
-            nativeBuildInputs = nativeBuildInputs;
-            buildInputs = buildInputs;
-          };
-
-          test = naersk'.buildPackage {
-            mode = "test";
-            src = ./.;
-
-            nativeBuildInputs = nativeBuildInputs;
-            buildInputs = buildInputs;
-
-            # Ensure detailed test output appears in nix build log
-            cargoTestOptions = x: x ++ ["1>&2"];
           };
         };
       }
