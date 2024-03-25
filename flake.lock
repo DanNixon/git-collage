@@ -2,23 +2,20 @@
   "nodes": {
     "fenix": {
       "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
+        "nixpkgs": "nixpkgs",
         "rust-analyzer-src": "rust-analyzer-src"
       },
       "locked": {
-        "lastModified": 1700029366,
-        "narHash": "sha256-0URFgoMK5M+xs2hHEGRJN/04Qy/nXrDgftZ7KTx0kA8=",
+        "lastModified": 1711347842,
+        "narHash": "sha256-NEu85M2kpGlEBPVNSIB0nOSLWg3x6R3px5Nd+vthdsU=",
         "owner": "nix-community",
         "repo": "fenix",
-        "rev": "092bd452904e749efa39907aa4a20a42678ac31e",
+        "rev": "12619df460ea671b1e94a5c2c8c17ca91cb86ebe",
         "type": "github"
       },
       "original": {
-        "owner": "nix-community",
-        "repo": "fenix",
-        "type": "github"
+        "id": "fenix",
+        "type": "indirect"
       }
     },
     "flake-utils": {
@@ -61,15 +58,32 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1700083842,
-        "narHash": "sha256-uC5v4VyUPgC5L3zv7e9q6+TRCm+eiA+Ow5vcH67ef/I=",
+        "lastModified": 1711163522,
+        "narHash": "sha256-YN/Ciidm+A0fmJPWlHBGvVkcarYWSC+s3NTPk/P+q3c=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "9008bc4eb62c878d0812105ea1b34255d651df88",
+        "rev": "44d0940ea560dee511026a53f0e2e2cde489b4d4",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1711124224,
+        "narHash": "sha256-l0zlN/3CiodvWDtfBOVxeTwYSRz93muVbXWSpaMjXxM=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "56528ee42526794d413d6f244648aaee4a7b56c0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-23.11",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -79,7 +93,7 @@
         "fenix": "fenix",
         "flake-utils": "flake-utils",
         "naersk": "naersk",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs_2"
       }
     },
     "rust-analyzer-src": {

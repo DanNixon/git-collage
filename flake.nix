@@ -1,13 +1,8 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
 
     flake-utils.url = "github:numtide/flake-utils";
-
-    fenix = {
-      url = "github:nix-community/fenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     naersk = {
       url = "github:nix-community/naersk";
@@ -28,20 +23,14 @@
           inherit system;
         };
 
-        toolchain = fenix.packages.${system}.toolchainOf {
-          channel = "1.76";
-          date = "2024-02-08";
-          sha256 = "e4mlaJehWBymYxJGgnbuCObVlqMlQSilZ8FljG9zPHY=";
-        };
-
         naersk' = pkgs.callPackage naersk {
-          cargo = toolchain.rust;
-          rustc = toolchain.rust;
+          cargo = pkgs.cargo;
+          rustc = pkgs.rustc;
         };
 
-        cargo = builtins.fromTOML (builtins.readFile ./Cargo.toml);
-        name = cargo.package.name;
-        version = cargo.package.version;
+        cargoMetadata = builtins.fromTOML (builtins.readFile ./Cargo.toml);
+        name = cargoMetadata.package.name;
+        version = cargoMetadata.package.version;
 
         nativeBuildInputs = with pkgs; [pkg-config];
         buildInputs = with pkgs; [openssl];
@@ -52,11 +41,17 @@
 
           packages = with pkgs; [
             # Rust toolchain
-            toolchain.toolchain
+            cargo
+            rustc
+
+            # Code analysis tools
+            clippy
+            rust-analyzer
 
             # Code formatting tools
-            alejandra
             treefmt
+            alejandra
+            rustfmt
 
             # Rust dependency linting
             cargo-deny
