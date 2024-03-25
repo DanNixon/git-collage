@@ -31,10 +31,10 @@ jobs:
         run: nix develop --command cargo-deny check
 
       - name: Clippy
-        run: nix build -L .#clippy
+        run: nix develop --command cargo clippy --all-targets -- -D clippy::all
 
       - name: Test
-        run: nix build -L .#test
+        run: nix develop --command cargo test --all-targets
 
   build:
     name: Build
@@ -47,10 +47,5 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@v10
       - uses: DeterminateSystems/magic-nix-cache-action@v4
 
-      # Evaluate the devshell here so that the time reported for subsequent
-      # steps that use it reflect what is actually done there.
-      - name: Evaluate devshell
-        run: nix develop
-
       - name: Build
-        run: nix build -L
+        run: nix build --print-build-logs
