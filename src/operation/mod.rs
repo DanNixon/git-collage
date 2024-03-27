@@ -6,6 +6,7 @@ mod stale;
 use crate::config::RepositoryMapping;
 use anyhow::{anyhow, Result};
 use clap::Subcommand;
+use clap_complete::Shell;
 use crossbeam_channel::{select, unbounded};
 use std::{fmt, thread};
 
@@ -25,6 +26,12 @@ pub(crate) enum Command {
     /// Identify stale/unmanaged local mirrors
     #[clap(name = "stale")]
     IdentifyStale(stale::Cli),
+
+    /// Generate shell completions
+    Completions {
+        /// Shell to generate completions for
+        shell: Shell,
+    },
 }
 
 pub(crate) type CommandResult =
@@ -81,6 +88,9 @@ impl Command {
                 Command::Mirror => mirror::run(&mappings, s),
                 Command::GarbageCollect => garbage_collect::run(&mappings, s),
                 Command::IdentifyStale(args) => stale::run(&mappings, args),
+                Command::Completions { .. } => {
+                    panic!("Should not reach here when the completions subcommand was used")
+                }
             };
 
             match result {
