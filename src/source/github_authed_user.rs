@@ -3,6 +3,7 @@ use anyhow::Result;
 use async_trait::async_trait;
 use octocrab::Octocrab;
 use serde::{Deserialize, Serialize};
+use std::fmt::Display;
 
 #[derive(Debug, Deserialize)]
 pub(crate) struct GithubAuthenticatedUser {
@@ -73,23 +74,25 @@ struct Visibilities {
     visibility: Vec<Visibility>,
 }
 
-impl ToString for Visibilities {
-    fn to_string(&self) -> String {
+impl Display for Visibilities {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self.visibility.len() {
-            1 => serde_variant::to_variant_name(&self.visibility[0])
-                .unwrap()
-                .to_string(),
+            1 => write!(
+                f,
+                "{}",
+                serde_variant::to_variant_name(&self.visibility[0]).unwrap()
+            ),
             2 => {
                 if self.visibility.contains(&Visibility::Private)
                     && (self.visibility.contains(&Visibility::Private)
                         || self.visibility.contains(&Visibility::Internal))
                 {
-                    "both".to_string()
+                    write!(f, "both")
                 } else {
-                    "".to_string()
+                    write!(f, "")
                 }
             }
-            _ => "".to_string(),
+            _ => write!(f, ""),
         }
     }
 }
@@ -107,13 +110,15 @@ struct Affiliations {
     affiliation: Vec<Affiliation>,
 }
 
-impl ToString for Affiliations {
-    fn to_string(&self) -> String {
-        self.affiliation
+impl Display for Affiliations {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = self
+            .affiliation
             .iter()
             .map(|i| serde_variant::to_variant_name(i).unwrap())
             .collect::<Vec<&str>>()
-            .join(",")
+            .join(",");
+        write!(f, "{}", s)
     }
 }
 
