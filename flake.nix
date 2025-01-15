@@ -5,9 +5,9 @@
   };
 
   outputs = {
-    self,
     nixpkgs,
     flake-utils,
+    ...
   }:
     flake-utils.lib.eachDefaultSystem (
       system: let
@@ -52,7 +52,7 @@
           RUSTFLAGS = "-D unused-crate-dependencies";
         };
 
-        packages = {
+        packages = rec {
           default = rustPlatform.buildRustPackage {
             pname = name;
             version = version;
@@ -62,6 +62,25 @@
 
             nativeBuildInputs = nativeBuildInputs;
             buildInputs = buildInputs;
+          };
+
+          container-image = pkgs.dockerTools.buildImage {
+            name = name;
+            tag = "latest";
+            created = "now";
+
+            runAsRoot = ''
+              #!${pkgs.runtimeShell}
+              mkdir -p /config
+              mkdir -p /data
+            '';
+
+            config = {
+              Entrypoint = ["${default}/bin/git-collage"];
+              Env = [
+                "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+              ];
+            };
           };
         };
       }
