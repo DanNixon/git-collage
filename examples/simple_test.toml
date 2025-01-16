@@ -1,0 +1,15 @@
+[[providers]]
+path = 'mirrors/misc'
+
+[[providers.ref_matchers.rules]]
+type = 'exact'
+expr = 'refs/heads/main'
+
+[providers.source]
+type = 'static_list'
+
+[[providers.source.repos]]
+git_url = 'https://github.com/dannixon/dotfiles'
+
+[[providers.source.repos]]
+git_url = 'https://github.com/dannixon/git-collage'
