@@ -16,7 +16,7 @@ async-trait = "0.1.88"
 chrono = "0.4.40"
 clap = { version = "4.5.23", features = ["derive"] }
 clap_complete = "4.5.23"
-crossbeam-channel = "0.5.14"
+crossbeam-channel = "0.5.15"
 enum_dispatch = "0.3.13"
 env_logger = "0.11.6"
 futures = "0.3.31"
