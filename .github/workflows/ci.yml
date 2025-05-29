@@ -16,47 +16,85 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
-      - uses: DeterminateSystems/nix-installer-action@v20
-
-      # Evaluate the devshell here so that the time reported for subsequent
-      # steps that use it reflect what is actually done there.
-      - name: Evaluate devshell
-        run: nix develop
+      - uses: cachix/install-nix-action@v31
+      - uses: cachix/cachix-action@v16
+        with:
+          name: devenv
+      - name: Install devenv.sh
+        run: nix profile install nixpkgs#devenv
 
       - name: Format
-        run: nix develop --command treefmt --fail-on-change
+        shell: devenv shell bash -- -e {0}
+        run: treefmt --fail-on-change
 
       - name: cargo-deny
-        run: nix develop --command cargo-deny check
+        shell: devenv shell bash -- -e {0}
+        run: cargo deny check
 
       - name: Clippy
-        run: nix develop --command cargo clippy --all-targets -- -D clippy::all
+        shell: devenv shell bash -- -e {0}
+        run: cargo clippy --all-targets -- -D clippy::all
+
+      - name: Build
+        shell: devenv shell bash -- -e {0}
+        run: cargo build --all-targets
 
       - name: Test
-        run: nix develop --command cargo test --all-targets
+        shell: devenv shell bash -- -e {0}
+        run: cargo test --all-targets
 
-  build:
-    name: Build
+  build-container-images:
+    name: Build Container Images
     needs:
       - formatting-and-quality
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v5
-      - uses: DeterminateSystems/nix-installer-action@v20
 
-      - name: Build
-        run: nix build --print-build-logs
+      - name: Build image
+        run: buildah build -t git-collage:latest .
 
-      - name: Build and push container image
-        if: ${{ github.ref_name == 'main' || github.ref_type == 'tag' }}
+      - name: Export image to archive
         run: |
-          set -x
+          set -eo pipefail
 
-          # Build image via Nix and take the resulting path as the local container registry
-          local_cr="docker-archive://$(nix build .#container-image --no-link --print-out-paths)"
+          # See https://github.com/actions/runner-images/issues/10443
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 
-          # The container registry to push images to (GHCR)
+          skopeo copy \
+            "containers-storage:localhost/git-collage:latest" \
+            "docker-archive:/tmp/oci-image-git-collage.tar"
+
+      - name: Upload image archive
+        uses: actions/upload-artifact@v5
+        with:
+          name: oci-image-git-collage
+          path: /tmp/oci-image-git-collage.tar
+
+  publish-container-images:
+    name: Publish Container Images
+    if: (github.ref_name == 'main' || github.ref_type == 'tag') && github.repository == 'DanNixon/git-collage'
+    needs:
+      - build-container-images
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download image archive
+        uses: actions/download-artifact@v6
+        with:
+          name: oci-image-git-collage
+
+      - name: Publish image
+        run: |
+          set -eo pipefail
+
+          # See https://github.com/actions/runner-images/issues/10443
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+          local_cr="docker-archive:oci-image-git-collage.tar"
+
+          # The container registry to push images to
           remote_cr="docker://ghcr.io/dannixon/git-collage"
           remote_cr_creds="${{ github.repository_owner }}:${{ github.token }}"
 
@@ -68,6 +106,5 @@ jobs:
 
           # If the trigger was a tag (i.e. a release)
           if [[ "${{ github.ref_type }}" == 'tag' ]]; then
-            # Push image using the "latest" tag
             skopeo copy --dest-creds="$remote_cr_creds" "$local_cr" "$remote_cr:latest"
           fi
