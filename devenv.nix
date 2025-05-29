@@ -15,9 +15,5 @@
     # Container image tools
     buildah
     skopeo
-
-    # Dependencies
-    pkg-config
-    openssl
   ];
 }
