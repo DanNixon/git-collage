@@ -15,7 +15,7 @@ pub(crate) struct Ruleset {
 
 impl Match for Ruleset {
     fn matches(&self, name: &str) -> bool {
-        self.rules.iter().map(|r| r.matches(name)).any(|i| i)
+        self.rules.iter().any(|r| r.matches(name))
     }
 }
 
@@ -57,7 +57,7 @@ impl<'de> Deserialize<'de> for RegexRule {
 
 struct RegexRuleVisitor;
 
-impl<'de> Visitor<'de> for RegexRuleVisitor {
+impl Visitor<'_> for RegexRuleVisitor {
     type Value = RegexRule;
 
     fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {

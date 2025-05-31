@@ -10,7 +10,7 @@ use std::{
 
 fn is_a_git_repo(path: &Path) -> bool {
     // Ignore likely non-bare repos (git-collage will only ever create bare repos)
-    if path.components().last() == Some(Component::Normal(".git".as_ref())) {
+    if path.components().next_back() == Some(Component::Normal(".git".as_ref())) {
         return false;
     }
 
