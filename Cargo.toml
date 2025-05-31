@@ -2,7 +2,7 @@
 name = "git-collage"
 description = "A tool for selectively mirroring Git repositories"
 version = "0.4.3"
-edition = "2021"
+edition = "2024"
 readme = "README.md"
 license = "MIT"
 homepage = "https://github.com/DanNixon/git-collage"
