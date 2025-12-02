@@ -22,7 +22,7 @@ env_logger = "0.11.6"
 futures = "0.3.31"
 git2 = { version = "0.20.1", features = ["vendored-libgit2", "vendored-openssl"] }
 log = "0.4.28"
-octocrab = "0.47.0"
+octocrab = "0.48.1"
 rayon = "1.11.0"
 regex = "1.12.2"
 serde = { version = "1.0.228", features = ["derive"] }
