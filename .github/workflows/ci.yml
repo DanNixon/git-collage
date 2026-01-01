@@ -67,7 +67,7 @@ jobs:
             "docker-archive:/tmp/oci-image-git-collage.tar"
 
       - name: Upload image archive
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: oci-image-git-collage
           path: /tmp/oci-image-git-collage.tar
