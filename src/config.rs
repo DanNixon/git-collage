@@ -26,6 +26,11 @@ fn get_config_paths(paths: &[PathBuf]) -> Result<Vec<PathBuf>> {
                     } else {
                         warn!("Skipping file: {}", entry_path.display());
                     }
+                } else if entry_path.is_dir() {
+                    warn!(
+                        "Skipping subdirectory (non-recursive config search): {}",
+                        entry_path.display()
+                    );
                 }
             }
         } else if path.is_file() {
@@ -34,8 +39,10 @@ fn get_config_paths(paths: &[PathBuf]) -> Result<Vec<PathBuf>> {
             } else {
                 warn!("Duplicate config file: {}", path.display());
             }
+        } else if !path.exists() {
+            warn!("Path does not exist: {}", path.display());
         } else {
-            warn!("Failed to read path: {}", path.display());
+            warn!("Path is not a file or directory: {}", path.display());
         }
     }
 
