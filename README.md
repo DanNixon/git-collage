@@ -18,4 +18,4 @@ Things to note:
 - Console output below INFO level may contain sensitive information (e.g. GitHub tokens).
 - The recommended settings for [GitHub tokens](https://github.com/settings/personal-access-tokens) are:
   - Repository access: All repositories
-  - Permissions: Metadata, Contents
+  - Permissions: Metadata (Read-only), Contents (Read-only)
