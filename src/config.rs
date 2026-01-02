@@ -92,7 +92,7 @@ impl fmt::Display for RepositoryMapping {
     }
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug)]
 pub(crate) struct Config {
     providers: Vec<ProviderConfig>,
 }
