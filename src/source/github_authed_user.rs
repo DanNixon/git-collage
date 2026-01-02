@@ -1,12 +1,13 @@
 use crate::source::{SourceRepositoryMapping, SourceRepositoryMappingProducer};
-use anyhow::Result;
+use anyhow::{Result, anyhow};
 use octocrab::Octocrab;
 use serde::{Deserialize, Serialize};
+use std::env;
 use std::fmt::Display;
 
 #[derive(Debug, Deserialize)]
 pub(crate) struct GithubAuthenticatedUser {
-    token: String,
+    token_env_var: String,
     #[serde(flatten)]
     visibility: Visibilities,
     #[serde(flatten)]
@@ -15,9 +16,14 @@ pub(crate) struct GithubAuthenticatedUser {
 
 impl SourceRepositoryMappingProducer for GithubAuthenticatedUser {
     async fn repository_mappings(&self) -> Result<Vec<SourceRepositoryMapping>> {
-        let octocrab = Octocrab::builder()
-            .personal_token(self.token.clone())
-            .build()?;
+        let token = env::var(&self.token_env_var).map_err(|_| {
+            anyhow!(
+                "Token environment variable '{}' not set",
+                self.token_env_var
+            )
+        })?;
+
+        let octocrab = Octocrab::builder().personal_token(token.clone()).build()?;
 
         let mut page = octocrab
             .current()
@@ -42,7 +48,7 @@ impl SourceRepositoryMappingProducer for GithubAuthenticatedUser {
             .map(|r| {
                 let mut git_url = r.clone_url.clone().unwrap();
                 git_url.set_username(&username).unwrap();
-                git_url.set_password(Some(&self.token)).unwrap();
+                git_url.set_password(Some(&token)).unwrap();
 
                 SourceRepositoryMapping {
                     path: match &r.full_name {
