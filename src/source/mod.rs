@@ -6,12 +6,10 @@ use crate::{
     source::{github_authed_user::GithubAuthenticatedUser, static_list::StaticList},
 };
 use anyhow::Result;
-use async_trait::async_trait;
 use serde::Deserialize;
 use std::path::PathBuf;
 use url::Url;
 
-#[async_trait]
 pub(crate) trait SourceRepositoryMappingProducer {
     async fn repository_mappings(&self) -> Result<Vec<SourceRepositoryMapping>>;
 }
@@ -30,7 +28,6 @@ pub(crate) enum Provider {
     GithubAuthenticatedUser(GithubAuthenticatedUser),
 }
 
-#[async_trait]
 impl SourceRepositoryMappingProducer for Provider {
     async fn repository_mappings(&self) -> Result<Vec<SourceRepositoryMapping>> {
         match &self {

@@ -4,14 +4,12 @@ use crate::{
     source::{Provider, SourceRepositoryMappingProducer},
     util::safe_display_url,
 };
-use anyhow::{anyhow, Result};
-use async_trait::async_trait;
+use anyhow::{Result, anyhow};
 use futures::stream::{self, StreamExt};
 use serde::Deserialize;
 use std::{fmt, fs, path::PathBuf};
 use url::Url;
 
-#[async_trait]
 pub(crate) trait RepositoryMappingProducer {
     async fn repository_mappings(&self) -> Vec<Result<RepositoryMapping>>;
 }
@@ -73,7 +71,6 @@ impl Config {
     }
 }
 
-#[async_trait]
 impl RepositoryMappingProducer for Config {
     async fn repository_mappings(&self) -> Vec<Result<RepositoryMapping>> {
         stream::iter(&self.providers)
@@ -93,7 +90,6 @@ struct ProviderConfig {
     repo_filters: Chain,
 }
 
-#[async_trait]
 impl RepositoryMappingProducer for ProviderConfig {
     async fn repository_mappings(&self) -> Vec<Result<RepositoryMapping>> {
         match self.source.repository_mappings().await {
