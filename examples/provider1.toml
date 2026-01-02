@@ -1,0 +1,18 @@
+path = 'mirrors/private'
+
+[[ref_matchers.rules]]
+type = 'regex'
+expr = 'refs/heads/.*'
+[[ref_matchers.rules]]
+type = 'regex'
+expr = 'refs/tags/.*'
+
+[source]
+type = 'github_authenticated_user'
+token = ''
+affiliation = ['owner']
+visibility = ['public', 'private']
+
+[[filters]]
+type = 'blocklist'
+urls = ['https://github.com/DanNixon/not-this-one', 'https://github.com/DanNixon/or-this-one']

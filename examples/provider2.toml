@@ -1,0 +1,24 @@
+path = 'mirrors/misc'
+
+[[ref_matchers.rules]]
+type = 'exact'
+expr = 'refs/heads/main'
+[[ref_matchers.rules]]
+type = 'exact'
+expr = 'refs/heads/master'
+[[ref_matchers.rules]]
+type = 'regex'
+expr = 'refs/tags/.*'
+
+[source]
+type = 'static_list'
+
+[[source.repos]]
+git_url = 'https://github.com/dannixon/dotfiles'
+path = 'dotfiles'
+[[source.repos.ref_matchers.rules]]
+type = 'exact'
+expr = 'refs/heads/main'
+
+[[source.repos]]
+git_url = 'https://github.com/dannixon/ansible-system'

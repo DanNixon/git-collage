@@ -6,9 +6,41 @@ use crate::{
 };
 use anyhow::{Result, anyhow};
 use futures::stream::{self, StreamExt};
+use log::{error, warn};
 use serde::Deserialize;
 use std::{fmt, fs, path::PathBuf};
 use url::Url;
+
+fn get_config_paths(paths: &[PathBuf]) -> Result<Vec<PathBuf>> {
+    let mut config_files = Vec::new();
+
+    for path in paths {
+        if path.is_dir() {
+            let entries = fs::read_dir(path)?;
+            for entry in entries {
+                let entry = entry?;
+                let entry_path = entry.path();
+                if entry_path.is_file() {
+                    if entry_path.extension().is_some_and(|ext| ext == "toml") {
+                        config_files.push(entry_path);
+                    } else {
+                        warn!("Skipping file: {}", entry_path.display());
+                    }
+                }
+            }
+        } else if path.is_file() {
+            if !config_files.contains(path) {
+                config_files.push(path.to_path_buf());
+            } else {
+                warn!("Duplicate config file: {}", path.display());
+            }
+        } else {
+            warn!("Failed to read path: {}", path.display());
+        }
+    }
+
+    Ok(config_files)
+}
 
 pub(crate) trait RepositoryMappingProducer {
     async fn repository_mappings(&self) -> Vec<Result<RepositoryMapping>>;
@@ -38,36 +70,40 @@ pub(crate) struct Config {
 }
 
 impl Config {
-    pub(crate) fn load(files: &[PathBuf]) -> Result<Self> {
-        let configs: Vec<Config> = files
-            .iter()
-            .filter_map(|p| match fs::read_to_string(p) {
-                Ok(s) => Some(s),
-                Err(e) => {
-                    log::error!("Failed to read file: {}", e);
-                    None
-                }
-            })
-            .filter_map(|s| match toml::from_str::<Config>(&s) {
-                Ok(c) => Some(c),
-                Err(e) => {
-                    log::error!("Failed to parse config: {}", e);
-                    None
-                }
-            })
-            .collect();
+    pub(crate) fn load(paths: &[PathBuf]) -> Result<Self> {
+        let config_files = get_config_paths(paths)?;
 
-        if configs.len() == files.len() {
-            Ok(Self {
-                providers: configs.into_iter().flat_map(|c| c.providers).collect(),
-            })
-        } else {
-            Err(anyhow!(
-                "Some config files failed to load (loaded {} out of {})",
-                configs.len(),
-                files.len()
-            ))
+        if config_files.is_empty() {
+            return Err(anyhow!("No configuration files found"));
         }
+
+        let mut providers = Vec::new();
+
+        for file_path in config_files {
+            match fs::read_to_string(&file_path) {
+                Ok(s) => match toml::from_str::<ProviderConfig>(&s) {
+                    Ok(provider) => providers.push(provider),
+                    Err(e) => {
+                        error!("Failed to parse config file {}: {}", file_path.display(), e);
+                        return Err(anyhow!(
+                            "Failed to parse config file {}: {}",
+                            file_path.display(),
+                            e
+                        ));
+                    }
+                },
+                Err(e) => {
+                    error!("Failed to read file {}: {}", file_path.display(), e);
+                    return Err(anyhow!(
+                        "Failed to read file {}: {}",
+                        file_path.display(),
+                        e
+                    ));
+                }
+            }
+        }
+
+        Ok(Self { providers })
     }
 }
 
