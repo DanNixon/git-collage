@@ -14,6 +14,7 @@ use url::Url;
 fn get_config_paths(paths: &[PathBuf]) -> Result<Vec<PathBuf>> {
     let mut config_files = Vec::new();
     let mut seen_canonical = HashSet::new();
+    let mut seen_uncanonicalized = HashSet::new();
 
     for path in paths {
         if path.is_dir() {
@@ -26,7 +27,7 @@ fn get_config_paths(paths: &[PathBuf]) -> Result<Vec<PathBuf>> {
                         // Try to canonicalize the path to detect duplicates
                         match entry_path.canonicalize() {
                             Ok(canonical) => {
-                                if seen_canonical.insert(canonical.clone()) {
+                                if seen_canonical.insert(canonical) {
                                     config_files.push(entry_path);
                                 } else {
                                     warn!("Duplicate config file: {}", entry_path.display());
@@ -38,8 +39,12 @@ fn get_config_paths(paths: &[PathBuf]) -> Result<Vec<PathBuf>> {
                                     entry_path.display(),
                                     e
                                 );
-                                // Still add the file if canonicalization fails
-                                config_files.push(entry_path);
+                                // Fallback to original path comparison if canonicalization fails
+                                if seen_uncanonicalized.insert(entry_path.clone()) {
+                                    config_files.push(entry_path);
+                                } else {
+                                    warn!("Duplicate config file: {}", entry_path.display());
+                                }
                             }
                         }
                     } else {
@@ -68,8 +73,12 @@ fn get_config_paths(paths: &[PathBuf]) -> Result<Vec<PathBuf>> {
                         path.display(),
                         e
                     );
-                    // Still add the file if canonicalization fails
-                    config_files.push(path.to_path_buf());
+                    // Fallback to original path comparison if canonicalization fails
+                    if seen_uncanonicalized.insert(path.to_path_buf()) {
+                        config_files.push(path.to_path_buf());
+                    } else {
+                        warn!("Duplicate config file: {}", path.display());
+                    }
                 }
             }
         } else if !path.exists() {
