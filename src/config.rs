@@ -13,8 +13,7 @@ use url::Url;
 
 fn get_config_paths(paths: &[PathBuf]) -> Result<Vec<PathBuf>> {
     let mut config_files = Vec::new();
-    let mut seen_canonical = HashSet::new();
-    let mut seen_uncanonicalized = HashSet::new();
+    let mut seen_paths = HashSet::new();
 
     for path in paths {
         if path.is_dir() {
@@ -24,28 +23,20 @@ fn get_config_paths(paths: &[PathBuf]) -> Result<Vec<PathBuf>> {
                 let entry_path = entry.path();
                 if entry_path.is_file() {
                     if entry_path.extension().is_some_and(|ext| ext == "toml") {
-                        // Try to canonicalize the path to detect duplicates
-                        match entry_path.canonicalize() {
-                            Ok(canonical) => {
-                                if seen_canonical.insert(canonical) {
-                                    config_files.push(entry_path);
-                                } else {
-                                    warn!("Duplicate config file: {}", entry_path.display());
-                                }
-                            }
-                            Err(e) => {
-                                warn!(
-                                    "Failed to canonicalize path {}: {}",
-                                    entry_path.display(),
-                                    e
-                                );
-                                // Fallback to original path comparison if canonicalization fails
-                                if seen_uncanonicalized.insert(entry_path.clone()) {
-                                    config_files.push(entry_path);
-                                } else {
-                                    warn!("Duplicate config file: {}", entry_path.display());
-                                }
-                            }
+                        // Try to canonicalize the path to detect duplicates, fall back to original path
+                        let path_to_check = entry_path.canonicalize().unwrap_or_else(|e| {
+                            warn!(
+                                "Failed to canonicalize path {}: {}",
+                                entry_path.display(),
+                                e
+                            );
+                            entry_path.clone()
+                        });
+                        
+                        if seen_paths.insert(path_to_check) {
+                            config_files.push(entry_path);
+                        } else {
+                            warn!("Duplicate config file: {}", entry_path.display());
                         }
                     } else {
                         warn!("Skipping file: {}", entry_path.display());
@@ -58,28 +49,20 @@ fn get_config_paths(paths: &[PathBuf]) -> Result<Vec<PathBuf>> {
                 }
             }
         } else if path.is_file() {
-            // Try to canonicalize the path to detect duplicates
-            match path.canonicalize() {
-                Ok(canonical) => {
-                    if seen_canonical.insert(canonical) {
-                        config_files.push(path.to_path_buf());
-                    } else {
-                        warn!("Duplicate config file: {}", path.display());
-                    }
-                }
-                Err(e) => {
-                    warn!(
-                        "Failed to canonicalize path {}: {}",
-                        path.display(),
-                        e
-                    );
-                    // Fallback to original path comparison if canonicalization fails
-                    if seen_uncanonicalized.insert(path.to_path_buf()) {
-                        config_files.push(path.to_path_buf());
-                    } else {
-                        warn!("Duplicate config file: {}", path.display());
-                    }
-                }
+            // Try to canonicalize the path to detect duplicates, fall back to original path
+            let path_to_check = path.canonicalize().unwrap_or_else(|e| {
+                warn!(
+                    "Failed to canonicalize path {}: {}",
+                    path.display(),
+                    e
+                );
+                path.to_path_buf()
+            });
+            
+            if seen_paths.insert(path_to_check) {
+                config_files.push(path.to_path_buf());
+            } else {
+                warn!("Duplicate config file: {}", path.display());
             }
         } else if !path.exists() {
             warn!("Path does not exist: {}", path.display());
