@@ -1,7 +1,7 @@
 // TODO: tidy this module
 
 use regex::Regex;
-use serde::{de::Visitor, Deserialize, Deserializer};
+use serde::{Deserialize, Deserializer, de::Visitor};
 use std::fmt;
 
 pub(crate) trait Match {

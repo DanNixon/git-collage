@@ -4,7 +4,7 @@ use crate::{
     operation::{CommandError, CommandResult, CommandResultDetails},
     util::git_timestamp,
 };
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use chrono::{DateTime, FixedOffset};
 use crossbeam_channel::Sender;
 use git2::{
