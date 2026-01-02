@@ -9,7 +9,7 @@ expr = 'refs/tags/.*'
 
 [source]
 type = 'github_authenticated_user'
-token = ''
+token_env_var = 'GITHUB_TOKEN'
 affiliation = ['owner']
 visibility = ['public', 'private']
 
