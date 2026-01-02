@@ -4,7 +4,7 @@ mod mirror;
 mod stale;
 
 use crate::config::RepositoryMapping;
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use clap::Subcommand;
 use clap_complete::Shell;
 use crossbeam_channel::{select, unbounded};
@@ -56,18 +56,20 @@ impl Command {
     pub(crate) fn run(&self, mappings: Vec<Result<RepositoryMapping>>) -> Result<()> {
         let (s, r) = unbounded::<CommandResult>();
 
-        thread::spawn(move || loop {
-            select! {
-                recv(r) -> s => {
-                    match s {
-                        Ok(s) => {
-                            match s {
-                                Ok(s) => log::info!("{}", s),
-                                Err(e) => log::error!("{}", e),
+        thread::spawn(move || {
+            loop {
+                select! {
+                    recv(r) -> s => {
+                        match s {
+                            Ok(s) => {
+                                match s {
+                                    Ok(s) => log::info!("{}", s),
+                                    Err(e) => log::error!("{}", e),
+                                }
                             }
-                        }
-                        Err(_) => {
-                            break;
+                            Err(_) => {
+                                break;
+                            }
                         }
                     }
                 }

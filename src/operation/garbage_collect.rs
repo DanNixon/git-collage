@@ -2,7 +2,7 @@ use crate::{
     config::RepositoryMapping,
     operation::{CommandError, CommandResult, CommandResultDetails},
 };
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use crossbeam_channel::Sender;
 use rayon::prelude::*;
 use std::{
