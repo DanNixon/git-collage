@@ -15,7 +15,7 @@ See `git-collage --help` for syntax and [`examples`](./examples) for a sample co
 
 Things to note:
 
-- Console output below INFO level may contain sensitive information (e.g. Github tokens).
+- Console output below INFO level may contain sensitive information (e.g. GitHub tokens).
 - The recommended settings for [GitHub tokens](https://github.com/settings/personal-access-tokens) are:
   - Repository access: All repositories
   - Permissions: Metadata, Contents
