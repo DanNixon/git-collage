@@ -56,11 +56,11 @@ fn get_config_paths(paths: &[PathBuf]) -> Result<Vec<PathBuf>> {
                     path.display(),
                     e
                 );
-                path.to_path_buf()
+                path.clone()
             });
             
             if seen_paths.insert(path_to_check) {
-                config_files.push(path.to_path_buf());
+                config_files.push(path.clone());
             } else {
                 warn!("Duplicate config file: {}", path.display());
             }
