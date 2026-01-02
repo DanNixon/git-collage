@@ -3,7 +3,6 @@ use crate::{
     source::{SourceRepositoryMapping, SourceRepositoryMappingProducer},
 };
 use anyhow::Result;
-use async_trait::async_trait;
 use serde::Deserialize;
 use std::path::PathBuf;
 use url::Url;
@@ -13,7 +12,6 @@ pub(crate) struct StaticList {
     repos: Vec<Repository>,
 }
 
-#[async_trait]
 impl SourceRepositoryMappingProducer for StaticList {
     async fn repository_mappings(&self) -> Result<Vec<SourceRepositoryMapping>> {
         Ok(self

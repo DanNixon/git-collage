@@ -1,6 +1,5 @@
 use crate::source::{SourceRepositoryMapping, SourceRepositoryMappingProducer};
 use anyhow::Result;
-use async_trait::async_trait;
 use octocrab::Octocrab;
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
@@ -14,7 +13,6 @@ pub(crate) struct GithubAuthenticatedUser {
     affiliation: Affiliations,
 }
 
-#[async_trait]
 impl SourceRepositoryMappingProducer for GithubAuthenticatedUser {
     async fn repository_mappings(&self) -> Result<Vec<SourceRepositoryMapping>> {
         let octocrab = Octocrab::builder()
