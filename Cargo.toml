@@ -19,9 +19,9 @@ crossbeam-channel = "0.5.15"
 enum_dispatch = "0.3.13"
 env_logger = "0.11.10"
 futures = "0.3.32"
-git2 = { version = "0.20.4", features = ["vendored-libgit2", "vendored-openssl"] }
+git2 = { version = "0.21.0", features = ["vendored-libgit2", "vendored-openssl"] }
 log = "0.4.29"
-octocrab = "0.49.7"
+octocrab = "0.53.1"
 rayon = "1.11.0"
 regex = "1.12.3"
 serde = { version = "1.0.228", features = ["derive"] }
