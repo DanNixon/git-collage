@@ -63,28 +63,31 @@ impl RefStatusReport {
 
 impl fmt::Display for RefStatusReport {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        if self.previous_oid.is_none() || self.previous_timestamp.is_none() {
-            write!(
+        match (self.previous_oid, self.previous_timestamp) {
+            (Some(previous_oid), Some(previous_timestamp)) => {
+                if previous_oid == self.current_oid {
+                    write!(
+                        f,
+                        "[nop] {} {:?} : {}",
+                        self.current_oid, self.current_timestamp, self.name
+                    )
+                } else {
+                    write!(
+                        f,
+                        "[chg] {} {:?} => {} {:?} : {}",
+                        previous_oid,
+                        previous_timestamp,
+                        self.current_oid,
+                        self.current_timestamp,
+                        self.name
+                    )
+                }
+            }
+            _ => write!(
                 f,
                 "[new] {} {:?} : {}",
                 self.current_oid, self.current_timestamp, self.name
-            )
-        } else if self.previous_oid.unwrap() == self.current_oid {
-            write!(
-                f,
-                "[nop] {} {:?} : {}",
-                self.current_oid, self.current_timestamp, self.name
-            )
-        } else {
-            write!(
-                f,
-                "[chg] {} {:?} => {} {:?} : {}",
-                self.previous_oid.unwrap(),
-                self.previous_timestamp.as_ref().unwrap(),
-                self.current_oid,
-                self.current_timestamp,
-                self.name
-            )
+            ),
         }
     }
 }
