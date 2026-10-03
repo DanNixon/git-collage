@@ -35,11 +35,11 @@ fn find_git_repos(path: &Path) -> Vec<PathBuf> {
         let entries: Vec<DirEntry> = match fs::read_dir(path) {
             Ok(o) => o.filter_map(|i| i.ok()).collect(),
             Err(e) if e.kind() == io::ErrorKind::PermissionDenied => {
-                log::warn!("{}: {}", e, &path.display());
+                log::warn!("{}: {}", e, path.display());
                 vec![]
             }
             Err(e) => {
-                log::error!("{}: {}", e, &path.display());
+                log::error!("{}: {}", e, path.display());
                 vec![]
             }
         };
